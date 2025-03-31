@@ -1,0 +1,50 @@
+# Node.js / Express project specific
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# Dependency directories
+bower_components/
+
+# IDEs and text editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage directory for testing
+coverage/
+
+# Jest / Mocha testing output
+*.test.js
+*.spec.js
+
+# Misc
+*.swp
+_commands.md
+backup.sql
+db-data/category.csv
+db-data/order.csv
+db-data/orderproduct.csv
+db-data/product.csv
+db-data/productpromotionevent.csv
+db-data/promotionevent.csv
+db-data/stockmanagement.csv
+db-data/user.csv
+docker-compose.yml
+init.sql
+schema_backup.sql
+docker-compose.yml

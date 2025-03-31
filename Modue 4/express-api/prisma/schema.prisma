@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())   
+  parent    Category? @relation("CategoryParent", fields: [parentId], references: [id])
+  parentId  Int? 
+  name      String   @unique                                 
+  slug      String   @unique                          
+  isActive  Boolean  @default(false)                   
+  level     Int      @default(0)                       
+
+  children  Category[]  @relation("CategoryParent")
+  products  Product[]   @relation("CategoryProducts")
+
+  @@map("category")
+}
+
+model Product {
+  id                Int                   @id @default(autoincrement())
+  category          Category              @relation("CategoryProducts", fields: [categoryId], references: [id])
+  categoryId        Int
+  name              String                @unique @db.VarChar(50)
+  slug              String                @unique @db.VarChar(55)
+  description       String?
+  isDigital         Boolean               @default(false)
+  isActive          Boolean               @default(false)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime?             @updatedAt
+  price             Decimal               @db.Decimal(10, 2)
+
+  productPromotions ProductPromotionEvent[]
+  stock             StockManagement?
+  productOrder      OrderProduct[]
+
+  @@map("product")  
+}
+
+model PromotionEvent {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique @db.VarChar(50)  
+  startDate      DateTime
+  endDate        DateTime
+  priceReduction Int
+
+  productPromotions ProductPromotionEvent[]
+
+  @@map("promotion_event")  
+}
+
+model ProductPromotionEvent {
+  id                Int           @id @default(autoincrement())
+  product           Product      @relation(fields: [productId], references: [id])
+  productId         Int
+  promotionEvent    PromotionEvent @relation(fields: [promotionEventId], references: [id])
+  promotionEventId  Int
+
+  @@map("product_promotion_event")  
+}
+
+model StockManagement {
+  id        Int       @id @default(autoincrement())
+  product Product     @relation(fields: [productId], references: [id])
+  productId Int       @unique
+
+  quantity  Int       @default(0)
+  lastCheckedAt DateTime
+
+  @@map("stock_management")  
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique @db.VarChar(50)
+  email    String @unique @db.VarChar(50)
+  password String
+  orders   Order[]
+
+  @@map("user")  
+}
+
+model Order {
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orderProducts OrderProduct[]
+
+  @@map("order")  
+}
+
+model OrderProduct {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
+
+  @@map("order_product")  
+}

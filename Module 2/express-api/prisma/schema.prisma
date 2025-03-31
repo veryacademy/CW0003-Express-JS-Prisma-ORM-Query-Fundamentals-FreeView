@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+
+  @@map("category") 
+}
+
+model Product {
+  id        Int       @id @default(autoincrement())
+
+  @@map("product")
+}
+
+model ProductPromotionEvent {
+  id        Int       @id @default(autoincrement())
+
+  @@map("product_promotion_event")  
+}
+
+model StockManagement {
+  id        Int       @id @default(autoincrement())
+
+  @@map("stock_management")  
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+
+  @@map("user")  
+}
+
+model Order {
+  id        Int       @id @default(autoincrement())
+
+  @@map("order")  
+}
+
+model OrderProduct {
+  id        Int       @id @default(autoincrement())
+  
+  @@map("order_product")  
+}

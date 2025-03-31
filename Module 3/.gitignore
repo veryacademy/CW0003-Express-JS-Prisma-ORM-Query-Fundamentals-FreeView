@@ -1,0 +1,36 @@
+# Node.js / Express project specific
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# Dependency directories
+bower_components/
+
+# IDEs and text editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage directory for testing
+coverage/
+
+# Jest / Mocha testing output
+*.test.js
+*.spec.js
+
+# Misc
+*.swp
