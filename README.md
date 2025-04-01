@@ -11,5 +11,5 @@ Embark on a practical journey to building efficient and scalable backend APIs wi
 
 This hands-on program focuses on equipping you with the core skills needed to seamlessly integrate your Express.js applications with databases using Prisma ORM.
 
-**View this course at YouTube**  
+**View the free-view edition of this course at YouTube**  
 📌 [Click here to view playlist!](https://www.youtube.com/playlist?list=PLOLrQ9Pn6cawkVrsWYE9jrOZRUUU7zids)  
