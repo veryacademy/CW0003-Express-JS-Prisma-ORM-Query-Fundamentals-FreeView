@@ -1,0 +1,70 @@
+# docker compose file
+services:
+  # PostgreSQL Service
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432" # Expose PostgreSQL on port 5432
+
+  # Express API Service
+  express-api:
+    build:
+      context: .
+    container_name: express_api
+    restart: always
+    ports:
+      - "3000:3000" # Expose Express on port 3000
+      - "5555:5555" # Expose Prisma Studio on port 5555
+    depends_on:
+      - postgres # Ensure PostgreSQL starts before Express API
+    environment:
+      DATABASE_URL: "postgresql://myuser:mypassword@postgres:5432/mydatabase?schema=public" # Prisma connection string
+    volumes:
+      - ./express-api:/app # Mount project directory (local express-api) inside the container
+      - node_modules:/app/node_modules # Named volume instead of an anonymous one
+    command: |
+      sh -c "
+        # Check if the project already exists by looking for package.json
+        if [ -f package.json ]; then
+          echo 'Project already exists. Skipping setup...';
+        else
+          echo 'Project does not exist. Initializing...';
+          
+          # Initialize a new Node.js project
+          npm init -y;
+          
+          # Initialize Prisma
+          npx prisma init;
+          
+          # Create index.js if it does not exist
+          if [ ! -f index.js ]; then
+            echo 'const express = require(\"express\");' > index.js;
+            echo 'const app = express();' >> index.js;
+            echo 'app.get(\"/\", (req, res) => res.send(\"Hello, Docker!\"));' >> index.js;
+            echo 'app.listen(3000, () => console.log(\"Server running on port 3000\"));' >> index.js;
+          fi;
+        fi;
+        
+        # Check if migration folder exists and delete it
+        if [ -d "prisma/migrations" ]; then
+          echo 'Deleting existing migration folder...';
+          rm -rf prisma/migrations;
+        fi;       
+
+        # Run Prisma migrate command
+        echo 'Running Prisma migrate...';
+        npx prisma migrate dev --name init;
+
+        # Start the Express app
+        # node index.js
+        npm run dev
+      "
+
+volumes:
+  node_modules:
